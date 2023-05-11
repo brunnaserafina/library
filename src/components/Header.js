@@ -9,12 +9,11 @@ export default function Header() {
       </h1>
 
       <div>
-        <h2>Autor ou título</h2>
-
-        <span>
-          <IconSearch color={"var(--dark-green)"} fontSize={"24px"} />
-          <input type="text" placeholder="O que você está procurando?" />
-        </span>
+        <IconSearch color={"var(--dark-green)"} fontSize={"24px"} />
+        <input
+          type="text"
+          placeholder="Digite o título ou o autor que você está procurando"
+        />
       </div>
 
       <span>
@@ -73,15 +72,15 @@ const Wrapper = styled.div`
     justify-content: center;
   }
 
-  > div input {
+  input {
     background-color: transparent;
     border: none;
     width: 100%;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   > div input::placeholder {
-    color: black;
+    color: gray;
     font-size: 16px;
   }
 
