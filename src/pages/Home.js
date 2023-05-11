@@ -6,12 +6,17 @@ import { getBooks } from "../services/libraryService";
 
 export default function Home() {
   const [booksAvailable, setBooksAvailable] = useState([]);
+  const [booksUnvailable, setBooksUnavailable] = useState([]);
 
   useEffect(() => {
     async function getAllBooks() {
       const allBooks = await getBooks();
       setBooksAvailable(
         allBooks.data.filter((book) => book.status === "disponível")
+      );
+
+      setBooksUnavailable(
+        allBooks.data.filter((book) => book.status === "indisponível")
       );
     }
 
@@ -22,7 +27,7 @@ export default function Home() {
     <>
       <Header />
       <Menu />
-      <BooksAvailable>
+      <Books>
         <h1>Disponíveis</h1>
         <div>
           {booksAvailable.map((item, index) => (
@@ -34,15 +39,26 @@ export default function Home() {
             </span>
           ))}
         </div>
-      </BooksAvailable>
+
+        <h1>Reservados</h1>
+        <div>
+          {booksUnvailable.map((item, index) => (
+            <span key={index}>
+              <img src={item.cover} alt={item.title} />
+              <h2>{item.title}</h2>
+              <p>{item.author}</p>
+              <button>Entrar na fila </button>
+            </span>
+          ))}
+        </div>
+      </Books>
     </>
   );
 }
-
-const BooksAvailable = styled.div`
+const Books = styled.div`
   width: 100vw;
   padding: 0 15vw;
-  margin-top: 5vh;
+  margin-bottom: 5vw;
 
   h1 {
     text-transform: uppercase;
@@ -50,11 +66,16 @@ const BooksAvailable = styled.div`
     font-weight: 700;
     color: var(--dark-green);
     margin-bottom: 20px;
+    margin-top: 5vh;
+  }
+
+  h1:nth-of-type(2) {
+    color: var(--red);
   }
 
   h2 {
     font-weight: 700;
-    height: 40px;
+    height: 50px;
     display: flex;
     align-items: center;
   }
@@ -83,6 +104,11 @@ const BooksAvailable = styled.div`
 
   p {
     margin: 10px 0;
+    height: 30px;
+  }
+
+  > div:nth-of-type(2) button {
+    background-color: var(--red);
   }
 
   button {

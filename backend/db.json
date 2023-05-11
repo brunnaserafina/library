@@ -5,7 +5,7 @@
       "title": "O Auto da Compadecida",
       "author": "Ariano Suassuna",
       "cover": "https://m.media-amazon.com/images/I/81taSo-m23L.jpg",
-      "category": "Peça teatral",
+      "category": "Literatura brasileira",
       "status": "disponível",
       "library": "São Paulo"
     },
@@ -14,7 +14,7 @@
       "title": "Iracema",
       "author": "José de Alencar",
       "cover": "https://www.lpm.com.br/livros/imagens/iracema_9788525421814_9788525406835_hd.jpg",
-      "category": "Romance",
+      "category": "Literatura brasileira",
       "status": "disponível",
       "library": "São Paulo"
     },
@@ -23,18 +23,27 @@
       "title": "Memórias Póstumas de Brás Cubas",
       "author": "Machado de Assis",
       "cover": "https://m.media-amazon.com/images/I/81Wv6VT-M5S.jpg",
-      "category": "Romance",
+      "category": "Literatura brasileira",
       "status": "disponível",
       "library": "São Paulo"
     },
     {
-        "id": 4,
-        "title": "O Cortiço",
-        "author": "Aluísio Azevedo",
-        "cover": "https://m.media-amazon.com/images/I/81m1emiSp-S.jpg",
-        "category": "Romance",
-        "status": "disponível",
-        "library": "São Paulo"
-      }
+      "id": 4,
+      "title": "O Cortiço",
+      "author": "Aluísio Azevedo",
+      "cover": "https://m.media-amazon.com/images/I/81m1emiSp-S.jpg",
+      "category": "Literatura brasileira",
+      "status": "indisponível",
+      "library": "São Paulo"
+    },
+    {
+      "id": 5,
+      "title": "Memórias de um Sargento de Milícias",
+      "author": "Manuel Antônio de Almeida",
+      "cover": "https://m.media-amazon.com/images/I/91+Cy1Yj4wL.jpg",
+      "category": "Literatura brasileira",
+      "status": "indisponível",
+      "library": "São Paulo"
+    }
   ]
 }
