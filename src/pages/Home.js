@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import books from "../dataBooks/Books";
 import Header from "../components/Header";
+import { Book } from "../components/Book";
 
 export default function Home() {
   const [booksAvailable, setBooksAvailable] = useState([]);
@@ -9,43 +10,6 @@ export default function Home() {
   const [booksSearch, setBooksSearch] = useState([]);
   const [category, setCategory] = useState("");
   const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    async function getAllBooks() {
-      if (search === "") {
-        setBooksAvailable(
-          category === ""
-            ? books.filter((book) => book.status === "disponível")
-            : books.filter(
-                (book) =>
-                  book.status === "disponível" &&
-                  book.category === `${category}`
-              )
-        );
-
-        setBooksUnavailable(
-          category === ""
-            ? books.filter((book) => book.status === "indisponível")
-            : books.filter(
-                (book) =>
-                  book.status === "indisponível" &&
-                  book.category === `${category}`
-              )
-        );
-      } else {
-        setBooksSearch(
-          books.filter((book) => {
-            return (
-              book.title.toLowerCase().includes(search.toLowerCase()) ||
-              book.author.toLowerCase().includes(search.toLowerCase())
-            );
-          })
-        );
-      }
-    }
-
-    getAllBooks();
-  }, [category, search]);
 
   function handleBookReservation(title, author, status) {
     const message = `Olá, gostaria de ${
@@ -57,6 +21,26 @@ export default function Home() {
     );
   }
 
+  useEffect(() => {
+    async function getAllBooks() {
+      if (search === "") {
+        const available = getBooksByStatusAndCategory("disponível", category);
+        setBooksAvailable(available);
+
+        const unavailable = getBooksByStatusAndCategory(
+          "indisponível",
+          category
+        );
+        setBooksUnavailable(unavailable);
+      } else {
+        const searchResults = getBooksBySearch(search);
+        setBooksSearch(searchResults);
+      }
+    }
+
+    getAllBooks();
+  }, [category, search]);
+
   return (
     <>
       <Header
@@ -65,84 +49,78 @@ export default function Home() {
         search={search}
         setSearch={setSearch}
       />
-      {search !== "" ? (
-        <Books>
-          <div>
-            {booksSearch?.map((item, index) => (
-              <span key={index}>
-                <img src={item.cover} alt={item.title} />
-                <h2>{item.title}</h2>
-                <p>{item.author}</p>
-                <Button
-                  isAvailable={item.status === "disponível"}
-                  onClick={() =>
-                    handleBookReservation(item.title, item.author, item.status)
-                  }
-                >
-                  {item.status === "disponível" ? "Reservar" : "Entrar na fila"}
-                </Button>
-              </span>
-            ))}
-          </div>
-        </Books>
-      ) : (
-        <Books>
-          {booksAvailable.length > 0 && <h1>Disponíveis</h1>}
-          <div>
-            {booksAvailable.map((item, index) => (
-              <span key={index}>
-                <img src={item.cover} alt={item.title} />
-                <h2>{item.title}</h2>
-                <p>{item.author}</p>
-                <Button
-                  isAvailable={item.status === "disponível"}
-                  onClick={() =>
-                    handleBookReservation(item.title, item.author, item.status)
-                  }
-                >
-                  Reservar
-                </Button>
-              </span>
-            ))}
-          </div>
 
-          {booksUnvailable.length > 0 && <h1>Reservados</h1>}
-          <div>
-            {booksUnvailable.map((item, index) => (
-              <span key={index}>
-                <img src={item.cover} alt={item.title} />
-                <h2>{item.title}</h2>
-                <p>{item.author}</p>
-                <Button
-                  isAvailable={item.status === "disponível"}
-                  onClick={() =>
-                    handleBookReservation(item.title, item.author, item.status)
-                  }
-                >
-                  Entrar na fila{" "}
-                </Button>
-              </span>
-            ))}
-          </div>
-        </Books>
-      )}
+      <Books>
+        {search !== "" && (
+          <>
+            <h1>Resultado da busca</h1>
+            <div>
+              {booksSearch?.map((book, index) => (
+                <Book
+                  key={index}
+                  book={book}
+                  handleBookReservation={handleBookReservation}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {booksAvailable.length > 0 && search === "" && (
+          <>
+            <h1>Disponíveis</h1>
+            <div>
+              {booksAvailable.map((book, index) => (
+                <Book
+                  key={index}
+                  book={book}
+                  handleBookReservation={handleBookReservation}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {booksUnvailable.length > 0 && search === "" && (
+          <>
+            <h1>Reservados</h1>
+            <div>
+              {booksUnvailable.map((book, index) => (
+                <Book
+                  key={index}
+                  book={book}
+                  handleBookReservation={handleBookReservation}
+                  isQueue
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </Books>
     </>
   );
 }
 
-const Button = styled.button`
-  background-color: ${(props) =>
-    props.isAvailable ? "var(--light-green)" : "var(--red)"};
-  width: 100%;
-  height: 35px;
-  border-radius: 15px;
-  border: none;
-  color: var(--white);
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  margin-bottom: 15px;
-`;
+function getBooksByStatusAndCategory(status, category) {
+  const booksFilteredByStatus = books.filter((book) => book.status === status);
+
+  if (category !== "") {
+    return booksFilteredByStatus.filter((book) => book.category === category);
+  }
+
+  return booksFilteredByStatus;
+}
+
+function getBooksBySearch(search) {
+  const searchTerm = search.toLowerCase();
+
+  return books.filter((book) => {
+    const bookTitle = book.title.toLowerCase();
+    const bookAuthor = book.author.toLowerCase();
+
+    return bookTitle.includes(searchTerm) || bookAuthor.includes(searchTerm);
+  });
+}
 
 const Books = styled.div`
   width: 100vw;
@@ -209,5 +187,9 @@ const Books = styled.div`
   p {
     margin: 10px 0;
     height: 30px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 6vw;
   }
 `;
