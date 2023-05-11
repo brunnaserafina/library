@@ -6,65 +6,118 @@ import Header from "../components/Header";
 export default function Home() {
   const [booksAvailable, setBooksAvailable] = useState([]);
   const [booksUnvailable, setBooksUnavailable] = useState([]);
+  const [booksSearch, setBooksSearch] = useState([]);
   const [category, setCategory] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function getAllBooks() {
-      setBooksAvailable(
-        category === ""
-          ? books.filter((book) => book.status === "disponível")
-          : books.filter(
-              (book) =>
-                book.status === "disponível" && book.category === `${category}`
-            )
-      );
+      if (search === "") {
+        setBooksAvailable(
+          category === ""
+            ? books.filter((book) => book.status === "disponível")
+            : books.filter(
+                (book) =>
+                  book.status === "disponível" &&
+                  book.category === `${category}`
+              )
+        );
 
-      setBooksUnavailable(
-        category === ""
-          ? books.filter((book) => book.status === "indisponível")
-          : books.filter(
-              (book) =>
-                book.status === "indisponível" &&
-                book.category === `${category}`
-            )
-      );
+        setBooksUnavailable(
+          category === ""
+            ? books.filter((book) => book.status === "indisponível")
+            : books.filter(
+                (book) =>
+                  book.status === "indisponível" &&
+                  book.category === `${category}`
+              )
+        );
+      } else {
+        setBooksSearch(
+          books.filter((book) => {
+            return (
+              book.title.toLowerCase().includes(search.toLowerCase()) ||
+              book.author.toLowerCase().includes(search.toLowerCase())
+            );
+          })
+        );
+      }
     }
 
     getAllBooks();
-  }, [category]);
+  }, [category, search]);
 
   return (
     <>
-      <Header category={category} setCategory={setCategory} />
+      <Header
+        category={category}
+        setCategory={setCategory}
+        search={search}
+        setSearch={setSearch}
+      />
+      {search !== "" ? (
+        <Books>
+          <div>
+            {booksSearch?.map((item, index) => (
+              <span key={index}>
+                <img src={item.cover} alt={item.title} />
+                <h2>{item.title}</h2>
+                <p>{item.author}</p>
+                <Button isAvailable={item.status === "disponível"}>
+                  {item.status === "disponível" ? "Reservar" : "Entrar na fila"}
+                </Button>
+              </span>
+            ))}
+          </div>
+        </Books>
+      ) : (
+        <Books>
+          {booksAvailable.length > 0 && <h1>Disponíveis</h1>}
+          <div>
+            {booksAvailable.map((item, index) => (
+              <span key={index}>
+                <img src={item.cover} alt={item.title} />
+                <h2>{item.title}</h2>
+                <p>{item.author}</p>
+                <Button isAvailable={item.status === "disponível"}>
+                  Reservar
+                </Button>
+              </span>
+            ))}
+          </div>
 
-      <Books>
-        {booksAvailable.length > 0 && <h1>Disponíveis</h1>}
-        <div>
-          {booksAvailable.map((item, index) => (
-            <span key={index}>
-              <img src={item.cover} alt={item.title} />
-              <h2>{item.title}</h2>
-              <p>{item.author}</p>
-              <button>Reservar</button>
-            </span>
-          ))}
-        </div>
-
-        {booksUnvailable.length > 0 && <h1>Reservados</h1>}
-        <div>
-          {booksUnvailable.map((item, index) => (
-            <span key={index}>
-              <img src={item.cover} alt={item.title} />
-              <h2>{item.title}</h2>
-              <p>{item.author}</p>
-              <button>Entrar na fila </button>
-            </span>
-          ))}
-        </div>
-      </Books>
+          {booksUnvailable.length > 0 && <h1>Reservados</h1>}
+          <div>
+            {booksUnvailable.map((item, index) => (
+              <span key={index}>
+                <img src={item.cover} alt={item.title} />
+                <h2>{item.title}</h2>
+                <p>{item.author}</p>
+                <Button isAvailable={item.status === "disponível"}>
+                  Entrar na fila{" "}
+                </Button>
+              </span>
+            ))}
+          </div>
+        </Books>
+      )}
     </>
   );
 }
+
+const Button = styled.button`
+  background-color: ${(props) =>
+    props.isAvailable ? "var(--light-green)" : "var(--red)"};
+  width: 100%;
+  height: 35px;
+  border-radius: 15px;
+  border: none;
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 15px;
+`;
 
 const Books = styled.div`
   width: 100vw;
@@ -76,7 +129,6 @@ const Books = styled.div`
     font-size: 22px;
     font-weight: 700;
     color: var(--dark-green);
-    margin-bottom: 20px;
     margin-top: 5vh;
   }
 
@@ -95,7 +147,7 @@ const Books = styled.div`
     width: 135px;
     height: 205px;
     object-fit: cover;
-    margin-bottom: 20px;
+    margin: 20px 0;
     border: 1px solid var(--dark-green);
   }
 
@@ -132,22 +184,5 @@ const Books = styled.div`
   p {
     margin: 10px 0;
     height: 30px;
-  }
-
-  > div:nth-of-type(2) button {
-    background-color: var(--red);
-  }
-
-  button {
-    width: 100%;
-    height: 35px;
-    border-radius: 15px;
-    background-color: var(--light-green);
-    border: none;
-    color: var(--white);
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-bottom: 15px;
   }
 `;

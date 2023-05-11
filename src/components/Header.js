@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { IconSearch } from "../common/Icons";
 import books from "../dataBooks/Books";
 
-export default function Header({ category, setCategory }) {
+export default function Header({ category, setCategory, search, setSearch }) {
   const categories = books
     .reduce((acc, book) => {
       if (!acc.includes(book.category)) {
@@ -21,13 +21,21 @@ export default function Header({ category, setCategory }) {
 
         <div>
           <IconSearch color={"var(--dark-green)"} fontSize={"24px"} />
-          <input type="text" placeholder="O que você está procurando?" />
+          <input
+            type="text"
+            placeholder="O que você está procurando?"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
       </Logo>
 
       <Categories>
         <AllCategories
-          onClick={() => setCategory("")}
+          onClick={() => {
+            setCategory("");
+            setSearch("");
+          }}
           textDecoration={category === ""}
         >
           Todas as categorias
@@ -36,7 +44,10 @@ export default function Header({ category, setCategory }) {
         {categories.map((item, index) => (
           <Category
             key={index}
-            onClick={() => setCategory(item)}
+            onClick={() => {
+              setCategory(item);
+              setSearch("");
+            }}
             textDecoration={item === category}
           >
             {item}
@@ -60,6 +71,7 @@ const Logo = styled.div`
   align-items: center;
   color: var(--white);
   background-color: var(--dark-green);
+  margin-bottom: 40px;
 
   h1 {
     font-family: Ropa Sans;
