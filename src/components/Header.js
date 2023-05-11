@@ -1,39 +1,60 @@
 import styled from "styled-components";
-import { IconHeart, IconSearch, IconUser } from "../common/Icons";
+import { IconSearch } from "../common/Icons";
+import books from "../dataBooks/Books";
 
-export default function Header() {
+export default function Header({ category, setCategory }) {
+  const categories = books
+    .reduce((acc, book) => {
+      if (!acc.includes(book.category)) {
+        acc.push(book.category);
+      }
+      return acc;
+    }, [])
+    .sort();
+
   return (
     <Wrapper>
-      <h1>
-        Nossa <br></br> Biblioteca
-      </h1>
+      <Logo>
+        <h1>
+          Nossa <br></br> Biblioteca
+        </h1>
 
-      <div>
-        <IconSearch color={"var(--dark-green)"} fontSize={"24px"} />
-        <input
-          type="text"
-          placeholder="Digite o título ou o autor que você está procurando"
-        />
-      </div>
+        <div>
+          <IconSearch color={"var(--dark-green)"} fontSize={"24px"} />
+          <input type="text" placeholder="O que você está procurando?" />
+        </div>
+      </Logo>
 
-      <span>
-        <IconHeart fontSize={"24px"} />
-        <p>Lista de desejos</p>
-      </span>
+      <Categories>
+        <AllCategories
+          onClick={() => setCategory("")}
+          textDecoration={category === ""}
+        >
+          Todas as categorias
+        </AllCategories>
 
-      <span>
-        <IconUser fontSize={"22px"} />
-        <p>Faça seu login</p>
-      </span>
+        {categories.map((item, index) => (
+          <Category
+            key={index}
+            onClick={() => setCategory(item)}
+            textDecoration={item === category}
+          >
+            {item}
+          </Category>
+        ))}
+      </Categories>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 110px;
-  margin-top: 30px;
-  padding: 0 15vw;
+  display: flex;
+`;
+
+const Logo = styled.div`
+  width: 40vw;
+  height: 80px;
+  padding: 0 0 0 15vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,32 +65,8 @@ const Wrapper = styled.div`
     font-family: Ropa Sans;
     color: var(--white);
     text-align: center;
-    font-size: 40px;
-  }
-
-  > div {
-    width: 400px;
-    height: 50px;
-    padding: 0 5px;
-    border-radius: 15px;
-    color: black;
-    background-color: var(--gray);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  > div h2 {
-    width: 30%;
-    border-right: 2px solid black;
-    text-align: center;
-  }
-
-  > div span {
-    width: 70%;
-    padding: 0 15px;
-    display: flex;
-    justify-content: center;
+    font-size: 33px;
+    margin-right: 30px;
   }
 
   input {
@@ -77,6 +74,17 @@ const Wrapper = styled.div`
     border: none;
     width: 100%;
     font-size: 14px;
+  }
+
+  > div {
+    width: 250px;
+    height: 40px;
+    border-radius: 15px;
+    color: black;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
   }
 
   > div input::placeholder {
@@ -89,14 +97,31 @@ const Wrapper = styled.div`
 
     caret-color: var(--dark-green);
   }
+`;
 
-  > span {
-    display: flex;
-    align-items: center;
-  }
+const Category = styled.h4`
+  margin-right: 10px;
+  cursor: pointer;
+  text-decoration: ${(props) => (props.textDecoration ? "underline" : "none")};
+`;
 
-  > span p {
-    font-size: 18px;
-    margin-left: 5px;
+const AllCategories = styled.h3`
+  text-decoration: ${(props) => (props.textDecoration ? "underline" : "none")};
+`;
+
+const Categories = styled.div`
+  width: 60vw;
+  height: 80px;
+  padding: 0 15vw 0 5vw;
+  background-color: var(--dark-green);
+  color: var(--white);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+
+  h3 {
+    margin: 0 10px;
+    cursor: pointer;
   }
 `;

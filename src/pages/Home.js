@@ -1,34 +1,44 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import books from "../dataBooks/Books";
 import Header from "../components/Header";
-import Menu from "../components/Menu";
-import { getBooks } from "../services/libraryService";
 
 export default function Home() {
   const [booksAvailable, setBooksAvailable] = useState([]);
   const [booksUnvailable, setBooksUnavailable] = useState([]);
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     async function getAllBooks() {
-      const allBooks = await getBooks();
       setBooksAvailable(
-        allBooks.data.filter((book) => book.status === "disponível")
+        category === ""
+          ? books.filter((book) => book.status === "disponível")
+          : books.filter(
+              (book) =>
+                book.status === "disponível" && book.category === `${category}`
+            )
       );
 
       setBooksUnavailable(
-        allBooks.data.filter((book) => book.status === "indisponível")
+        category === ""
+          ? books.filter((book) => book.status === "indisponível")
+          : books.filter(
+              (book) =>
+                book.status === "indisponível" &&
+                book.category === `${category}`
+            )
       );
     }
 
     getAllBooks();
-  }, []);
+  }, [category]);
 
   return (
     <>
-      <Header />
-      <Menu />
+      <Header category={category} setCategory={setCategory} />
+
       <Books>
-        <h1>Disponíveis</h1>
+        {booksAvailable.length > 0 && <h1>Disponíveis</h1>}
         <div>
           {booksAvailable.map((item, index) => (
             <span key={index}>
@@ -40,7 +50,7 @@ export default function Home() {
           ))}
         </div>
 
-        <h1>Reservados</h1>
+        {booksUnvailable.length > 0 && <h1>Reservados</h1>}
         <div>
           {booksUnvailable.map((item, index) => (
             <span key={index}>
@@ -55,6 +65,7 @@ export default function Home() {
     </>
   );
 }
+
 const Books = styled.div`
   width: 100vw;
   padding: 0 15vw;
@@ -90,6 +101,22 @@ const Books = styled.div`
 
   div {
     display: flex;
+    overflow-x: auto;
+  }
+
+  div::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+  }
+
+  div::-webkit-scrollbar-track {
+    background-color: var(--gray);
+  }
+
+  div::-webkit-scrollbar-thumb {
+    background-color: var(--dark-green);
+    border-radius: 8px;
+    cursor: pointer;
   }
 
   span {
@@ -112,7 +139,7 @@ const Books = styled.div`
   }
 
   button {
-    width: 145px;
+    width: 100%;
     height: 35px;
     border-radius: 15px;
     background-color: var(--light-green);
@@ -121,5 +148,6 @@ const Books = styled.div`
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
+    margin-bottom: 15px;
   }
 `;
