@@ -47,6 +47,16 @@ export default function Home() {
     getAllBooks();
   }, [category, search]);
 
+  function handleBookReservation(title, author, status) {
+    const message = `Olá, gostaria de ${
+      status === "indisponível" ? "entrar na fila para" : ""
+    } reservar o livro "${title}" do(a) autor(a) "${author}" que está disponível no site Nossa Biblioteca.`;
+
+    window.open(
+      `https://wa.me/5548996059421?text=${encodeURIComponent(message)}`
+    );
+  }
+
   return (
     <>
       <Header
@@ -63,7 +73,12 @@ export default function Home() {
                 <img src={item.cover} alt={item.title} />
                 <h2>{item.title}</h2>
                 <p>{item.author}</p>
-                <Button isAvailable={item.status === "disponível"}>
+                <Button
+                  isAvailable={item.status === "disponível"}
+                  onClick={() =>
+                    handleBookReservation(item.title, item.author, item.status)
+                  }
+                >
                   {item.status === "disponível" ? "Reservar" : "Entrar na fila"}
                 </Button>
               </span>
@@ -79,7 +94,12 @@ export default function Home() {
                 <img src={item.cover} alt={item.title} />
                 <h2>{item.title}</h2>
                 <p>{item.author}</p>
-                <Button isAvailable={item.status === "disponível"}>
+                <Button
+                  isAvailable={item.status === "disponível"}
+                  onClick={() =>
+                    handleBookReservation(item.title, item.author, item.status)
+                  }
+                >
                   Reservar
                 </Button>
               </span>
@@ -93,7 +113,12 @@ export default function Home() {
                 <img src={item.cover} alt={item.title} />
                 <h2>{item.title}</h2>
                 <p>{item.author}</p>
-                <Button isAvailable={item.status === "disponível"}>
+                <Button
+                  isAvailable={item.status === "disponível"}
+                  onClick={() =>
+                    handleBookReservation(item.title, item.author, item.status)
+                  }
+                >
                   Entrar na fila{" "}
                 </Button>
               </span>
