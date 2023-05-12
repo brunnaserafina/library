@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+<h1 align="left">Nossa biblioteca </h1>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+###
 
-## Available Scripts
+<p align="left">Este é um website de um catálogo de livros de uma biblioteca municipal. </p>
 
-In the project directory, you can run:
+###
 
-### `npm start`
+<div align="center"> 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<img src="https://github.com/brunnaserafina/library/assets/106851605/70e07638-d4eb-4fdd-a8f3-c15f0f1f41ba" />
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+  
+</div> 
 
-### `npm test`
+###
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+###
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<br clear="both">
 
-### `npm run eject`
+### ⚙️ Funcionalidades
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Visualizar livros disponíveis
+- Visualizar livros reservados
+- Pesquisar livro de acordo com o título ou autor
+- Visualizar categorias
+- Reservar ou entrar na fila do livro
+- Encaminhamento para o WhatsApp da biblioteca
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+###
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+<br />
 
-## Learn More
+### 🛠️ Tecnologias utilizadas
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+###
+  <img align="left" alt="react" height="30px" src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" />
+   <img align="left" alt="react-router" height="30px" src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" />
+   <img align="left" alt="styled-components" height="30px" src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white" />
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+###
 
-### Code Splitting
+<br />
+<br />
+<br />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### ▶️ Rodando a aplicação
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Clone este repositório em uma pasta de sua preferência:
 
-### Making a Progressive Web App
+```bash
+ $ git clone https://github.com/brunnaserafina/library.git
+```
+2. Navegue até o diretório do projeto:
+```bash
+ $ cd library
+```
+3. Instale as dependências:
+```bash
+ $ npm i
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+4. Você pode, opcionalmente, rodar o build para criar uma versão de produção da aplicação
+```bash
+ $ npm run build
+```
+5. Rode a aplicação:
+```bash
+ $ npm start
+```
+6. Por fim, acesse http://localhost:3000 no seu browser!
+###
+<br />
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Autores
+Grupo 20:
+- Brunna Serafina da Silva
+- Emerson Cristian Vilanova Da Silva
+- Filipe Dos Santos Moura
+- João Gabriel Santos Naves
+- Leonardo Ferraz David
+- Lucas Roberto De Castro
+- Matheus Adelino Aleixo Da Silva
