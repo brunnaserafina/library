@@ -11,16 +11,6 @@ export default function Home() {
   const [category, setCategory] = useState("");
   const [search, setSearch] = useState("");
 
-  function handleBookReservation(title, author, status) {
-    const message = `Olá, gostaria de ${
-      status === "indisponível" ? "entrar na fila para" : ""
-    } reservar o livro "${title}" do(a) autor(a) "${author}" que está disponível no site Nossa Biblioteca.`;
-
-    window.open(
-      `https://wa.me/5548996059421?text=${encodeURIComponent(message)}`
-    );
-  }
-
   useEffect(() => {
     async function getAllBooks() {
       if (search === "") {
@@ -56,11 +46,7 @@ export default function Home() {
             <h1>Resultado da busca</h1>
             <div>
               {booksSearch?.map((book, index) => (
-                <Book
-                  key={index}
-                  book={book}
-                  handleBookReservation={handleBookReservation}
-                />
+                <Book key={index} book={book} />
               ))}
             </div>
           </>
@@ -71,11 +57,7 @@ export default function Home() {
             <h1>Disponíveis</h1>
             <div>
               {booksAvailable.map((book, index) => (
-                <Book
-                  key={index}
-                  book={book}
-                  handleBookReservation={handleBookReservation}
-                />
+                <Book key={index} book={book} />
               ))}
             </div>
           </>
@@ -86,12 +68,7 @@ export default function Home() {
             <h1>Reservados</h1>
             <div>
               {booksUnvailable.map((book, index) => (
-                <Book
-                  key={index}
-                  book={book}
-                  handleBookReservation={handleBookReservation}
-                  isQueue
-                />
+                <Book key={index} book={book} isQueue />
               ))}
             </div>
           </>

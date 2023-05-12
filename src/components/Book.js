@@ -1,14 +1,27 @@
 import styled from "styled-components";
 
-export function Book({ book, onReservation }) {
+export function Book({ book }) {
   const { title, author, cover, status } = book;
+
+  function handleBookReservation(title, author, status) {
+    const message = `Olá, gostaria de ${
+      status === "indisponível" ? "entrar na fila para" : ""
+    } reservar o livro "${title}" do(a) autor(a) "${author}" que está disponível no site Nossa Biblioteca.`;
+
+    window.open(
+      `https://wa.me/5548996059421?text=${encodeURIComponent(message)}`
+    );
+  }
 
   return (
     <span>
       <img src={cover} alt={title} />
       <h2>{title}</h2>
       <p>{author}</p>
-      <Button isAvailable={status === "disponível"} onClick={onReservation}>
+      <Button
+        isAvailable={status === "disponível"}
+        onClick={() => handleBookReservation(title, author, status)}
+      >
         {status === "disponível" ? "Reservar" : "Entrar na fila"}
       </Button>
     </span>
