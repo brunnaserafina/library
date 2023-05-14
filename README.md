@@ -2,7 +2,7 @@
 
 ###
 
-<p align="left">Este é um website de um catálogo de livros de uma biblioteca municipal. </p>
+<p align="left">Este projeto consiste na criação de um website que serve como catálogo de livros de uma biblioteca municipal, preenchendo a lacuna de muitas bibliotecas públicas que não possuem um sistema próprio para gerenciamento de reservas. O website permite que os usuários consultem a disponibilidade e o status das reservas dos livros de forma remota, sem a necessidade de comparecer fisicamente à biblioteca. Para realizar uma reserva, basta selecionar o livro desejado no catálogo virtual e acionar o botão correspondente para enviar a solicitação diretamente para o Whatsapp. Com essa plataforma online, os usuários têm uma maneira prática e eficiente de gerenciar suas reservas, o que torna a experiência de uso da biblioteca mais acessível e prática.</p>
 
 ###
 
@@ -87,3 +87,7 @@ Grupo 20:
 - Leonardo Ferraz David
 - Lucas Roberto De Castro
 - Matheus Adelino Aleixo Da Silva
+
+### Vídeo
+
+Confira o site em funcionamento => https://www.youtube.com/watch?v=hZotibXw4RQ
