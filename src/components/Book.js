@@ -1,29 +1,77 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { IconDelete } from "../common/Icons";
+import { putStatusBook, deleteBook } from "../services/library";
 
-export function Book({ book }) {
-  const { title, author, cover, status } = book;
+export default function Book({ book, setRender }) {
+  const { id, titulo, autor, capa, disponivel } = book;
+  const [isAdminLogged, setIsAdminLogged] = useState(
+    localStorage.getItem("isAdminLoggedIn") === "true"
+  );
 
-  function handleBookReservation(title, author, status) {
+  function handleBookReservation(titulo, autor, status) {
     const message = `Olá, gostaria de ${
-      status === "indisponível" ? "entrar na fila para" : ""
-    } reservar o livro "${title}" do(a) autor(a) "${author}" que está disponível no site Nossa Biblioteca.`;
+      !disponivel ? "entrar na fila para" : ""
+    } reservar o livro "${titulo}" do(a) autor(a) "${autor}" que está disponível no site Nossa Biblioteca.`;
 
     window.open(
       `https://wa.me/5548996059421?text=${encodeURIComponent(message)}`
     );
   }
 
+  async function changeStatusBook() {
+    if (window.confirm("Tem certeza que deseja alterar o status do livro?")) {
+      try {
+        await putStatusBook(id);
+        setRender((prev) => !prev);
+      } catch (err) {
+        console.error(err);
+        alert("Não foi possível alterar o status do livro");
+      }
+    }
+  }
+
+  async function handleDeleteBook() {
+    if (window.confirm("Tem certeza que deseja deletar esse livro?")) {
+      try {
+        await deleteBook(id);
+        setRender((prev) => !prev);
+      } catch (err) {
+        console.error(err);
+        alert("Não foi possível deletar o livro, tente novamente");
+      }
+    }
+  }
+
   return (
     <span>
-      <img src={cover} alt={title} />
-      <h2>{title}</h2>
-      <p>{author}</p>
-      <Button
-        isAvailable={status === "disponível"}
-        onClick={() => handleBookReservation(title, author, status)}
-      >
-        {status === "disponível" ? "Reservar" : "Entrar na fila"}
-      </Button>
+      <Image>
+        <img src={capa} alt={titulo} />
+
+        {isAdminLogged && (
+          <span onClick={handleDeleteBook}>
+            <IconDelete />
+          </span>
+        )}
+      </Image>
+
+      <h2>{titulo}</h2>
+      <p>{autor}</p>
+
+      {isAdminLogged ? (
+        <>
+          <Button isAvailable={disponivel} onClick={changeStatusBook}>
+            {disponivel ? "Mudar para reservado" : "Mudar para disponível"}
+          </Button>
+        </>
+      ) : (
+        <Button
+          isAvailable={disponivel}
+          onClick={() => handleBookReservation(titulo, autor, disponivel)}
+        >
+          {disponivel ? "Reservar" : "Entrar na fila"}
+        </Button>
+      )}
     </span>
   );
 }
@@ -40,4 +88,25 @@ const Button = styled.button`
   font-weight: 700;
   cursor: pointer;
   margin-bottom: 15px;
+`;
+
+const Image = styled.div`
+  position: relative;
+
+  > span {
+    background-color: red;
+    display: block;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    right: 10;
+    top: 0;
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+  }
 `;

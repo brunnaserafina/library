@@ -1,35 +1,52 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import books from "../dataBooks/Books";
 import Header from "../components/Header";
-import { Book } from "../components/Book";
+import { getBooks } from "../services/library";
+import Book from "../components/Book";
+import { Link } from "react-router-dom";
 
-export default function Home() {
+export default function Home({ render, setRender }) {
   const [booksAvailable, setBooksAvailable] = useState([]);
   const [booksUnvailable, setBooksUnavailable] = useState([]);
   const [booksSearch, setBooksSearch] = useState([]);
   const [category, setCategory] = useState("");
   const [search, setSearch] = useState("");
+  const [isAdminLogged, setIsAdminLogged] = useState(
+    localStorage.getItem("isAdminLoggedIn") === "true"
+  );
 
   useEffect(() => {
     async function getAllBooks() {
       if (search === "") {
-        const available = getBooksByStatusAndCategory("disponível", category);
+        const books = (await getBooks()).data;
+
+        const available = getBooksByStatusAndCategory(books, true, category);
         setBooksAvailable(available);
 
-        const unavailable = getBooksByStatusAndCategory(
-          "indisponível",
-          category
-        );
+        const unavailable = getBooksByStatusAndCategory(books, false, category);
         setBooksUnavailable(unavailable);
       } else {
-        const searchResults = getBooksBySearch(search);
+        const searchResults = await getBooksBySearch(search);
         setBooksSearch(searchResults);
       }
     }
 
+    async function getBooksBySearch(search) {
+      const searchTerm = search.toLowerCase();
+
+      const books = (await getBooks()).data;
+
+      return books.filter((livro) => {
+        const bookTitle = livro.titulo.toLowerCase();
+        const bookAuthor = livro.autor.toLowerCase();
+        return (
+          bookTitle.includes(searchTerm) || bookAuthor.includes(searchTerm)
+        );
+      });
+    }
+
     getAllBooks();
-  }, [category, search]);
+  }, [category, search, render, setRender]);
 
   return (
     <>
@@ -41,6 +58,12 @@ export default function Home() {
       />
 
       <Books>
+        {isAdminLogged && (
+          <Link to="/cadastrar-livro" target="_blank">
+            <ButtonRegisterBook>Cadastrar novos livros</ButtonRegisterBook>
+          </Link>
+        )}
+
         {search !== "" && (
           <>
             <h1>Resultado da busca</h1>
@@ -57,7 +80,7 @@ export default function Home() {
             <h1>Disponíveis</h1>
             <div>
               {booksAvailable.map((book, index) => (
-                <Book key={index} book={book} />
+                <Book key={index} book={book} setRender={setRender} />
               ))}
             </div>
           </>
@@ -68,7 +91,7 @@ export default function Home() {
             <h1>Reservados</h1>
             <div>
               {booksUnvailable.map((book, index) => (
-                <Book key={index} book={book} isQueue />
+                <Book key={index} book={book} setRender={setRender} />
               ))}
             </div>
           </>
@@ -78,26 +101,36 @@ export default function Home() {
   );
 }
 
-function getBooksByStatusAndCategory(status, category) {
-  const booksFilteredByStatus = books.filter((book) => book.status === status);
+function getBooksByStatusAndCategory(books, disponivel, category) {
+  const booksFilteredByStatus = books.filter(
+    (livro) => livro.disponivel === disponivel
+  );
 
   if (category !== "") {
-    return booksFilteredByStatus.filter((book) => book.category === category);
+    return booksFilteredByStatus.filter(
+      (livro) => livro.categoria === category
+    );
   }
 
   return booksFilteredByStatus;
 }
 
-function getBooksBySearch(search) {
-  const searchTerm = search.toLowerCase();
-
-  return books.filter((book) => {
-    const bookTitle = book.title.toLowerCase();
-    const bookAuthor = book.author.toLowerCase();
-
-    return bookTitle.includes(searchTerm) || bookAuthor.includes(searchTerm);
-  });
-}
+const ButtonRegisterBook = styled.button`
+  background-color: var(--gray);
+  color: var(--dark-green);
+  height: 35px;
+  border-radius: 15px;
+  border: none;
+  width: fit-content;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 600;
+`;
 
 const Books = styled.div`
   width: 100vw;
@@ -164,6 +197,10 @@ const Books = styled.div`
   p {
     margin: 10px 0;
     height: 30px;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   @media (max-width: 768px) {

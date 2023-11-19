@@ -1,19 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IconMenuHamburger, IconSearch } from "../common/Icons";
-import books from "../dataBooks/Books";
+import {
+  IconAdmin,
+  IconMenuHamburger,
+  IconOut,
+  IconSearch,
+} from "../common/Icons";
+import { getCategories } from "../services/library";
 
 export default function Header({ category, setCategory, search, setSearch }) {
   const [openMenuHamburger, setOpenMenuHamburger] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [isAdminLogged, setIsAdminLogged] = useState(
+    localStorage.getItem("isAdminLoggedIn") === "true"
+  );
+  const navigate = useNavigate();
 
-  const categories = books
-    .reduce((acc, book) => {
-      if (!acc.includes(book.category)) {
-        acc.push(book.category);
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const categorias = (await getCategories()).data;
+        setCategories(categorias);
+      } catch (error) {
+        console.error("Erro ao buscar categorias:", error);
       }
-      return acc;
-    }, [])
-    .sort();
+    }
+
+    fetchCategories();
+  }, []);
+
+  async function loginAdmin() {
+    navigate("/login");
+  }
+
+  function logoutAdmin() {
+    localStorage.removeItem("isAdminLoggedIn");
+    setIsAdminLogged(false);
+    window.location.reload();
+  }
 
   return (
     <Wrapper>
@@ -46,12 +71,12 @@ export default function Header({ category, setCategory, search, setSearch }) {
           <Category
             key={index}
             onClick={() => {
-              setCategory(item);
+              setCategory(item.categoria);
               setSearch("");
             }}
-            textDecoration={item === category}
+            textDecoration={item.categoria === category}
           >
-            {item}
+            {item.categoria}
           </Category>
         ))}
 
@@ -74,17 +99,31 @@ export default function Header({ category, setCategory, search, setSearch }) {
               <li
                 key={index}
                 onClick={() => {
-                  setCategory(item);
+                  setCategory(item.categoria);
                   setSearch("");
                 }}
                 textDecoration={item === category}
               >
-                {item}
+                {item.categoria}
               </li>
             ))}
           </WindowCategories>
         )}
       </Categories>
+
+      <Admin onClick={isAdminLogged ? logoutAdmin : loginAdmin}>
+        {isAdminLogged ? (
+          <>
+            <IconOut />
+            <p>Sair</p>
+          </>
+        ) : (
+          <>
+            <IconAdmin />
+            <p>Admin</p>
+          </>
+        )}
+      </Admin>
     </Wrapper>
   );
 }
@@ -102,7 +141,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: var(--dark-green);
-  padding: 0 15vw;
+  padding: 0 12vw;
   width: 100vw;
 
   h1 {
@@ -151,6 +190,19 @@ const Wrapper = styled.div`
     h1 {
       margin-right: 0;
     }
+  }
+`;
+
+const Admin = styled.span`
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
